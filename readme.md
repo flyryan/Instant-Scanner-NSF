@@ -15,7 +15,6 @@ This guide provides step-by-step instructions for configuring and installing the
 4. [Verification](#verification)
 5. [Troubleshooting](#troubleshooting)
 6. [Security Considerations](#security-considerations)
-7. [Support](#support)
 
 ---
 
