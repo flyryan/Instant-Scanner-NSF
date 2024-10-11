@@ -16,7 +16,7 @@ $MaxConcurrentScans = 4  # Maximum number of concurrent scans to run simultaneou
 # =====================================
 
 # Toggle for Logging
-$EnableLogging = $true
+$EnableLogging = $false
 # Description: Enables logging of script activity to a file for auditing and troubleshooting.
 
 # Logging Configuration
@@ -25,8 +25,8 @@ if ($EnableLogging) {
 }
 
 # Toggle for Email Notifications on Errors
-$EnableEmailNotification = $true
-# Description: Sends an email notification whenever an error occurs during processing.
+$EnableEmailNotification = $false
+# Description: Sends an email notification whenever an error occurs during processing. Requires SMTP credential storage (see installation guide)
 
 # Email Notification Configuration
 if ($EnableEmailNotification) {
@@ -45,7 +45,7 @@ if ($EnableEmailNotification) {
 }
 
 # Toggle for Heartbeat Mechanism
-$EnableHeartbeat = $true
+$EnableHeartbeat = $false
 # Description: Updates a heartbeat file periodically to indicate that the script is running.
 
 # Heartbeat Mechanism Configuration
@@ -64,7 +64,7 @@ if ($EnableSelfCheck) {
 }
 
 # Toggle for Processed Files Logging
-$EnableProcessedFilesLog = $true
+$EnableProcessedFilesLog = $false
 # Description: Logs each successfully processed file to a log file for record-keeping.
 
 # Processed Files Log Configuration
