@@ -12,6 +12,7 @@ This guide provides step-by-step instructions for configuring and installing the
    - [Step 1: Place the Script File](#step-1-place-the-script-file)
    - [Step 2: Configure Execution Policy](#step-2-configure-execution-policy)
    - [Step 3: Create a Scheduled Task](#step-3-create-a-scheduled-task)
+   - [Optional Step: Store SMTP Credentials](#optional-step-store-smtp-credentials)
 4. [Verification](#verification)
 5. [Troubleshooting](#troubleshooting)
 6. [Security Considerations](#security-considerations)
@@ -25,7 +26,8 @@ Before installing and configuring the script, ensure the following prerequisites
 - **Operating System**: Windows Server or Windows Desktop OS with PowerShell installed (version 5.0 or higher is recommended).
 - **Permissions**: Administrator privileges to create scheduled tasks and modify system configurations.
 - **Trend Micro ScanMail for Domino**: Ensure it is installed and configured correctly on the system.
-- **SMTP Server**: An SMTP server is available for sending email notifications if email alerts are enabled.
+- **SMTP Server**: *(Optional)* An SMTP server is available for sending email notifications if email alerts are enabled.
+- **PowerShell Module**: *(Optional)* The `CredentialManager` module must be installed if email notifications with authentication are enabled.
 
 ---
 
@@ -56,12 +58,14 @@ $MaxConcurrentScans = 4
 
 The script includes several optional features that can be enabled or disabled. Each feature has associated configuration settings.
 
+**By default, all features are disabled except for the Self-Check Mechanism.**
+
 #### 1. Logging
 
-- **Toggle**: `$EnableLogging = $true`
+- **Toggle**: `$EnableLogging = $false` *(Disabled by default)*
 - **Description**: Enables logging of script activity to a file for auditing and troubleshooting.
 
-**Configuration:**
+**Configuration (if enabled):**
 
 ```powershell
 if ($EnableLogging) {
@@ -74,36 +78,45 @@ if ($EnableLogging) {
 
 #### 2. Email Notifications on Errors
 
-- **Toggle**: `$EnableEmailNotification = $true`
+- **Toggle**: `$EnableEmailNotification = $false` *(Disabled by default)*
 - **Description**: Sends an email notification whenever an error occurs during processing.
 
-**Configuration:**
+**Configuration (if enabled):**
 
 ```powershell
 if ($EnableEmailNotification) {
+    # Retrieve credentials from Credential Manager (if authentication is required)
+    # $Credential = Get-StoredCredential -Target "SMTPCredential"
+
     $EmailSettings = @{
         To         = "your.email@domain.com"          # Recipient email address.
         From       = "script.alerts@domain.com"       # Sender email address.
         Subject    = "ScanMail Script Error Notification"  # Email subject line.
         SmtpServer = "smtp.yourdomain.com"            # SMTP server address.
-        # Uncomment and set the following lines if authentication is required
-        # Credential = Get-Credential                 # Credentials for SMTP server authentication.
-        # UseSsl     = $true                          # Enable SSL for SMTP connection.
+        # Credential = $Credential                    # Uncomment if authentication is required.
+        # UseSsl     = $true                          # Enable SSL for SMTP connection if required.
+        # Port       = 587                            # SMTP port if different from default (25).
     }
 }
 ```
 
-- **$EmailSettings.To**: Set to the email address that should receive error notifications.
-- **$EmailSettings.From**: Set to the email address that will appear as the sender.
-- **$EmailSettings.SmtpServer**: Set to your SMTP server's address.
-- **Authentication**: If your SMTP server requires authentication, uncomment and configure the `Credential` and `UseSsl` lines.
+**Instructions:**
+
+- **EnableEmailNotification**: Set to `$true` to enable email notifications.
+- **SMTP Configuration**:
+  - **$EmailSettings.To**: Set to the email address that should receive error notifications.
+  - **$EmailSettings.From**: Set to the email address that will appear as the sender.
+  - **$EmailSettings.SmtpServer**: Set to your SMTP server's address.
+- **Authentication**:
+  - If your SMTP server requires authentication, uncomment and configure the `Credential` line.
+  - **Note**: You only need to store SMTP credentials (see [Optional Step: Store SMTP Credentials](#optional-step-store-smtp-credentials)) if email notifications are enabled and authentication is required.
 
 #### 3. Heartbeat Mechanism
 
-- **Toggle**: `$EnableHeartbeat = $true`
+- **Toggle**: `$EnableHeartbeat = $false` *(Disabled by default)*
 - **Description**: Updates a heartbeat file periodically to indicate that the script is running.
 
-**Configuration:**
+**Configuration (if enabled):**
 
 ```powershell
 if ($EnableHeartbeat) {
@@ -119,7 +132,7 @@ if ($EnableHeartbeat) {
 
 #### 4. Self-Check Mechanism
 
-- **Toggle**: `$EnableSelfCheck = $true`
+- **Toggle**: `$EnableSelfCheck = $true` *(Enabled by default)*
 - **Description**: Periodically checks worker jobs and restarts them if they have stopped running.
 
 **Configuration:**
@@ -135,10 +148,10 @@ if ($EnableSelfCheck) {
 
 #### 5. Processed Files Logging
 
-- **Toggle**: `$EnableProcessedFilesLog = $true`
+- **Toggle**: `$EnableProcessedFilesLog = $false` *(Disabled by default)*
 - **Description**: Logs each successfully processed file to a log file for record-keeping.
 
-**Configuration:**
+**Configuration (if enabled):**
 
 ```powershell
 if ($EnableProcessedFilesLog) {
@@ -221,7 +234,7 @@ Use the Windows Task Scheduler to run the script at system startup.
    - **Program/script**: Enter `powershell.exe`.
    - **Add arguments (optional)**:
 
-     ```plaintext
+     ```
      -ExecutionPolicy Bypass -File "C:\Scripts\ScanMail\ScanMailMonitor.ps1"
      ```
 
@@ -243,6 +256,51 @@ Use the Windows Task Scheduler to run the script at system startup.
    - Click **OK** to save the task.
    - If prompted, enter the credentials of the user account under which the task will run. This account should have the necessary permissions to execute the script and access required resources.
 
+### Optional Step: Store SMTP Credentials
+
+**This step is only necessary if you have enabled the Email Notifications on Errors feature and your SMTP server requires authentication.**
+
+1. **Install the CredentialManager Module**:
+
+   Open PowerShell as Administrator and run:
+
+   ```powershell
+   Install-Module -Name CredentialManager -Force
+   ```
+
+   - **Note**: You may need to adjust the execution policy temporarily to install the module:
+
+     ```powershell
+     Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+     ```
+
+2. **Store SMTP Credentials in Credential Manager**:
+
+   Run the following command in PowerShell (replace placeholders with your actual SMTP username and password):
+
+   ```powershell
+   New-StoredCredential -Target "SMTPCredential" -Username "your_smtp_username" -Password "your_smtp_password" -Type Generic
+   ```
+
+   - **"SMTPCredential"**: This is the name used to retrieve the credential in the script. Ensure it matches the name in the script's `Get-StoredCredential` line.
+   - **"your_smtp_username"**: Replace with your SMTP username (e.g., `user@domain.com`).
+   - **"your_smtp_password"**: Replace with your SMTP password.
+
+   **Security Note**:
+
+   - Ensure you run this command under the same user account that will execute the script.
+   - The credentials are stored securely by Windows and are encrypted.
+
+3. **Verify Credential Storage**:
+
+   You can verify that the credentials are stored by running:
+
+   ```powershell
+   Get-StoredCredential -Target "SMTPCredential"
+   ```
+
+   - This should return the credential object without displaying the password in plain text.
+
 ---
 
 ## Verification
@@ -259,19 +317,26 @@ After setting up the task, verify that the script is running correctly.
    - Locate your task and check the **Last Run Time** and **Last Run Result**.
    - A **Last Run Result** of `0x0` indicates success.
 
-3. **Verify Logs**:
+3. **Verify Functionality**:
 
-   - If logging is enabled, check the log file specified in `$LogFilePath`.
-   - Confirm that the script has started and is monitoring the specified directory.
+   - **Self-Check Mechanism**: Since this feature is enabled by default, ensure that worker jobs are running correctly. Check for any entries in the event logs or console outputs if applicable.
 
-4. **Test File Detection**:
+4. **Optional Features Verification**:
 
-   - Place a test NSF file in the monitored directory.
-   - Observe if the file is processed and logged accordingly.
+   - **If you enabled any optional features (Logging, Email Notifications, Heartbeat Mechanism, Processed Files Logging), verify their functionality accordingly.**
 
-5. **Check Heartbeat File**:
+   - **Logging**:
+     - Check the log file specified in `$LogFilePath` for script activity.
 
-   - If the heartbeat mechanism is enabled, verify that the heartbeat file is being updated at the specified intervals.
+   - **Email Notifications**:
+     - Induce an error intentionally (e.g., temporarily set an incorrect path in `$ScanmailPath`) to test if the script sends an email notification.
+     - After testing, revert any intentional errors.
+
+   - **Heartbeat File**:
+     - If the heartbeat mechanism is enabled, verify that the heartbeat file is being updated at the specified intervals.
+
+   - **Processed Files Log**:
+     - If this feature is enabled, place a test NSF file in the monitored directory and check if it's logged properly.
 
 ---
 
@@ -287,22 +352,27 @@ After setting up the task, verify that the script is running correctly.
 
   - Review the log file for any error messages.
   - Ensure all file paths and configurations are correct.
+  - Check for typos in the script, especially in the paths and settings.
 
 - **Email Notifications Not Sent**:
 
-  - Verify SMTP server settings.
-  - Check if the SMTP server requires authentication and configure accordingly.
+  - Verify that the **Email Notifications on Errors** feature is enabled (`$EnableEmailNotification = $true`).
+  - Check the SMTP server settings in `$EmailSettings`.
+  - If authentication is required, ensure SMTP credentials are stored correctly in Credential Manager and the `Credential` parameter is configured in the script.
   - Ensure that network connectivity to the SMTP server is available.
+  - Check for any firewall or antivirus settings that might block SMTP traffic.
 
 - **Heartbeat File Not Updating**:
 
-  - Confirm that the heartbeat mechanism is enabled.
+  - Confirm that the heartbeat mechanism is enabled (`$EnableHeartbeat = $true`).
   - Check the specified path for the heartbeat file.
+  - Verify that the script has write permissions to the location.
 
 - **Processed Files Not Logged**:
 
-  - Ensure the processed files logging is enabled.
+  - Ensure the processed files logging is enabled (`$EnableProcessedFilesLog = $true`).
   - Verify the path to the processed files log.
+  - Check for permission issues on the log file's directory.
 
 ---
 
@@ -312,7 +382,8 @@ After setting up the task, verify that the script is running correctly.
 
 - **Credentials**:
 
-  - If using credentials for SMTP authentication, consider using secure methods to store and retrieve credentials, such as using the `Get-Credential` cmdlet and storing credentials securely.
+  - **Secure Storage**: If using SMTP authentication, store credentials securely using the Credential Manager.
+  - **Access Control**: Ensure that only authorized users can access the credentials and that the script runs under the correct user account.
 
 - **File Permissions**:
 
@@ -321,6 +392,10 @@ After setting up the task, verify that the script is running correctly.
 - **Script Integrity**:
 
   - Keep the script in a secure location and limit write access to prevent unauthorized modifications.
+
+- **Credential Manager Module**:
+
+  - The `CredentialManager` module should be installed from a trusted source. Use the PowerShell Gallery to ensure authenticity.
 
 ---
 

@@ -30,14 +30,17 @@ $EnableEmailNotification = $true
 
 # Email Notification Configuration
 if ($EnableEmailNotification) {
+    # Retrieve credentials from Credential Manager
+    $Credential = Get-StoredCredential -Target "SMTPCredential"
+
     $EmailSettings = @{
         To         = "your.email@domain.com"          # Recipient email address.
         From       = "script.alerts@domain.com"       # Sender email address.
         Subject    = "ScanMail Script Error Notification"  # Email subject line.
         SmtpServer = "smtp.yourdomain.com"            # SMTP server address.
-        # Uncomment and set the following lines if authentication is required
-        # Credential = Get-Credential                 # Credentials for SMTP server authentication.
-        # UseSsl     = $true                          # Enable SSL for SMTP connection.
+        Credential = $Credential                      # Credentials for SMTP server authentication.
+        UseSsl     = $true                            # Enable SSL for SMTP connection if required.
+        Port       = 587                              # SMTP port if different from default (25).
     }
 }
 
