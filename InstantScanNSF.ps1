@@ -220,7 +220,7 @@ $ProcessQueueScript = {
 
             # Properly quote the file path
             $QuotedFilePath = '"' + $File + '"'
-            $ScanmailCommand = "load scanmail scan $QuotedFilePath"
+            $ScanmailCommand = "load SMDdbs -manual $QuotedFilePath"
 
             try {
                 # Execute the scan command
@@ -253,7 +253,7 @@ $Watcher = New-Object System.IO.FileSystemWatcher
 $Watcher.Path = $Folder
 $Watcher.Filter = "*.nsf"
 $Watcher.NotifyFilter = [System.IO.NotifyFilters]::FileName
-$Watcher.IncludeSubdirectories = $false
+$Watcher.IncludeSubdirectories = $true
 $Watcher.EnableRaisingEvents = $true
 
 $OnCreatedAction = {
