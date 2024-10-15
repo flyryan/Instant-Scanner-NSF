@@ -220,7 +220,7 @@ $ProcessQueueScript = {
 
             # Properly quote the file path
             $QuotedFilePath = '"' + $File + '"'
-            $ScanmailCommand = "load SMDdbs -manual $QuotedFilePath"
+            $ScanmailCommand = "-c 'load SMDdbs -manual $QuotedFilePath'"
 
             try {
                 # Execute the scan command
