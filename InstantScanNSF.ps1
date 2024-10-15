@@ -272,11 +272,22 @@ $FileCreatedEvent = Register-ObjectEvent $Watcher Created -Action $OnCreatedActi
 
 if ($EnableHeartbeat) {
     Write-Log "Heartbeat mechanism enabled."
-    $HeartbeatTimer = [System.Timers.Timer]::new($HeartbeatInterval)
+
+    # Store the timer object in a global variable to prevent garbage collection
+    $Global:HeartbeatTimer = [System.Timers.Timer]::new($HeartbeatInterval)
     $HeartbeatTimer.AutoReset = $true
     $HeartbeatTimer.Enabled = $true
+
+    # Use the 'using:' scope modifier to access the Update-Heartbeat function
     $HeartbeatTimer.Add_Elapsed({
-        Update-Heartbeat
+        try {
+            # Access the Update-Heartbeat function from the parent scope
+            & $using:UpdateHeartbeat
+        } catch {
+            # Log any errors that occur
+            $ErrorMessage = "Heartbeat error: $_"
+            Write-Log $ErrorMessage "ERROR"
+        }
     })
 }
 
