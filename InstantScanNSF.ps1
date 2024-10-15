@@ -263,7 +263,8 @@ $OnCreatedAction = {
     Write-Log "Enqueued new NSF file: $NewFile"
 }
 
-Register-ObjectEvent $Watcher Created -Action $OnCreatedAction
+# Store the event subscription objects
+$FileCreatedEvent = Register-ObjectEvent $Watcher Created -Action $OnCreatedAction
 
 # =====================================
 #         Heartbeat Mechanism
