@@ -312,12 +312,6 @@ if ($cancelKeyPressEvent) {
 }
 
 # =====================================
-#         Event Handlers Setup
-# =====================================
-
-# NOTE: Removed the [System.Console]::CancelKeyPress event handler to prevent errors in environments where it's not supported.
-
-# =====================================
 #          Main Script Logic
 # =====================================
 
