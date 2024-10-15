@@ -64,7 +64,6 @@ The script includes several optional features that can be enabled or disabled. E
 
 **By default, the following features are enabled:**
 
-- **Processed Files Logging**
 - **Self-Check Mechanism**
 
 **Other features are disabled by default.**
@@ -144,7 +143,7 @@ if ($EnableHeartbeat) {
 
 #### 4. Processed Files Logging
 
-- **Toggle**: `$EnableProcessedFilesLog = $true` *(Enabled by default)*
+- **Toggle**: `$EnableProcessedFilesLog = $false` *(Disabled by default)*
 - **Description**: Logs each processed file to a log file for record-keeping.
 
 **Configuration:**
@@ -348,7 +347,7 @@ After setting up the task, verify that the script is running correctly.
      - If the heartbeat mechanism is enabled, verify that the heartbeat file is being updated at the specified intervals.
 
    - **Processed Files Log**:
-     - Since this feature is enabled by default, place a test NSF file in the monitored directory and check if it's logged properly in the `$ProcessedFilesLog`.
+     - If processed file logging is enabled, place a test NSF file in the monitored directory and check if it's logged properly in the `$ProcessedFilesLog`.
 
 ---
 
