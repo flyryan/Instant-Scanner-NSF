@@ -8,7 +8,7 @@
 # =====================================
 
 $Folder = "C:\path\to\your\NSF\directory"       # Directory to monitor for new NSF files.
-$ScanmailPath = "C:\path\to\domino\cconsole.exe" # Path to the ScanMail console executable.
+$ScanmailPath = "C:\path\to\domino\nserver.exe" # Path to the ScanMail console executable.
 $MaxConcurrentScans = 4  # Maximum number of concurrent scans to run simultaneously.
 
 # =====================================
