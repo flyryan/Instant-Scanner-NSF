@@ -58,7 +58,7 @@ if ($EnableHeartbeat) {
 }
 
 # Toggle for Processed Files Logging
-$EnableProcessedFilesLog = $true
+$EnableProcessedFilesLog = $false
 # Description: Logs each processed file to a log file for record-keeping.
 
 # Processed Files Log Configuration

@@ -41,24 +41,33 @@ These settings are essential for the script to function correctly. Update the pl
 # Directory to monitor for new NSF files.
 $Folder = "C:\path\to\your\NSF\directory"
 
-# Path to the ScanMail console executable.
-$ScanmailPath = "C:\path\to\domino\console.exe"
+# Path to the Domino server console executable.
+$ConsolePath = "C:\path\to\Domino\nserver.exe"
 
 # Maximum number of concurrent scans to run simultaneously.
 $MaxConcurrentScans = 4
+
+# Console log level.
+$ConsoleLogLevel = "INFO"  # Valid options: DEBUG, INFO, WARNING, ERROR
 ```
 
 **Instructions:**
 
 - **$Folder**: Replace `"C:\path\to\your\NSF\directory"` with the path to the directory where NSF files are placed for scanning.
-- **$ScanmailPath**: Replace `"C:\path\to\domino\console.exe"` with the actual path to the `console.exe` file for ScanMail.
+- **$ConsolePath**: Replace `"C:\path\to\Domino\nserver.exe"` with the actual path to the Domino server console executable.
 - **$MaxConcurrentScans**: Set this to the number of concurrent scans you want to allow. This depends on your system's resources.
+- **$ConsoleLogLevel**: Set the desired console log level. Valid options are `DEBUG`, `INFO`, `WARNING`, and `ERROR`.
 
 ### Configuration Toggles and Features
 
 The script includes several optional features that can be enabled or disabled. Each feature has associated configuration settings.
 
-**By default, all features are disabled except for the Self-Check Mechanism.**
+**By default, the following features are enabled:**
+
+- **Processed Files Logging**
+- **Self-Check Mechanism**
+
+**Other features are disabled by default.**
 
 #### 1. Logging
 
@@ -71,10 +80,13 @@ The script includes several optional features that can be enabled or disabled. E
 if ($EnableLogging) {
     # Path to the log file where script activity will be recorded.
     $LogFilePath = "C:\path\to\logfile.log"
+    # File log level.
+    $FileLogLevel = "INFO"  # Valid options: DEBUG, INFO, WARNING, ERROR
 }
 ```
 
 - **$LogFilePath**: Set the path where you want the log file to be stored.
+- **$FileLogLevel**: Set the desired log level for the file output.
 
 #### 2. Email Notifications on Errors
 
@@ -89,13 +101,13 @@ if ($EnableEmailNotification) {
     # $Credential = Get-StoredCredential -Target "SMTPCredential"
 
     $EmailSettings = @{
-        To         = "your.email@domain.com"          # Recipient email address.
-        From       = "script.alerts@domain.com"       # Sender email address.
-        Subject    = "ScanMail Script Error Notification"  # Email subject line.
-        SmtpServer = "smtp.yourdomain.com"            # SMTP server address.
-        # Credential = $Credential                    # Uncomment if authentication is required.
-        # UseSsl     = $true                          # Enable SSL for SMTP connection if required.
-        # Port       = 587                            # SMTP port if different from default (25).
+        To         = "your.email@domain.com"                 # Recipient email address.
+        From       = "script.alerts@domain.com"              # Sender email address.
+        Subject    = "ScanMail Script Error Notification"    # Email subject line.
+        SmtpServer = "smtp.yourdomain.com"                   # SMTP server address.
+        # Credential = $Credential                           # Uncomment if authentication is required.
+        # UseSsl     = $true                                 # Enable SSL for SMTP connection if required.
+        # Port       = 587                                   # SMTP port if different from default (25).
     }
 }
 ```
@@ -109,7 +121,7 @@ if ($EnableEmailNotification) {
   - **$EmailSettings.SmtpServer**: Set to your SMTP server's address.
 - **Authentication**:
   - If your SMTP server requires authentication, uncomment and configure the `Credential` line.
-  - **Note**: You only need to store SMTP credentials (see [Optional Step: Store SMTP Credentials](#optional-step-store-smtp-credentials)) if email notifications are enabled and authentication is required.
+  - **Note**: You need to store SMTP credentials (see [Optional Step: Store SMTP Credentials](#optional-step-store-smtp-credentials)) if email notifications are enabled and authentication is required.
 
 #### 3. Heartbeat Mechanism
 
@@ -130,7 +142,23 @@ if ($EnableHeartbeat) {
 - **$HeartbeatFile**: Set the path where the heartbeat file will be created or updated.
 - **$HeartbeatInterval**: Adjust the interval as needed.
 
-#### 4. Self-Check Mechanism
+#### 4. Processed Files Logging
+
+- **Toggle**: `$EnableProcessedFilesLog = $true` *(Enabled by default)*
+- **Description**: Logs each processed file to a log file for record-keeping.
+
+**Configuration:**
+
+```powershell
+if ($EnableProcessedFilesLog) {
+    # Path to the log file where processed files are recorded.
+    $ProcessedFilesLog = "C:\path\to\processedfiles.log"
+}
+```
+
+- **$ProcessedFilesLog**: Set the path for the processed files log.
+
+#### 5. Self-Check Mechanism
 
 - **Toggle**: `$EnableSelfCheck = $true` *(Enabled by default)*
 - **Description**: Periodically checks worker jobs and restarts them if they have stopped running.
@@ -145,22 +173,6 @@ if ($EnableSelfCheck) {
 ```
 
 - **$SelfCheckInterval**: Adjust the interval for how often the script checks and restarts jobs.
-
-#### 5. Processed Files Logging
-
-- **Toggle**: `$EnableProcessedFilesLog = $false` *(Disabled by default)*
-- **Description**: Logs each successfully processed file to a log file for record-keeping.
-
-**Configuration (if enabled):**
-
-```powershell
-if ($EnableProcessedFilesLog) {
-    # Path to the log file where processed files are recorded.
-    $ProcessedFilesLog = "C:\path\to\processedfiles.log"
-}
-```
-
-- **$ProcessedFilesLog**: Set the path for the processed files log.
 
 ---
 
@@ -329,14 +341,14 @@ After setting up the task, verify that the script is running correctly.
      - Check the log file specified in `$LogFilePath` for script activity.
 
    - **Email Notifications**:
-     - Induce an error intentionally (e.g., temporarily set an incorrect path in `$ScanmailPath`) to test if the script sends an email notification.
+     - Induce an error intentionally (e.g., temporarily set an incorrect path in `$ConsolePath`) to test if the script sends an email notification.
      - After testing, revert any intentional errors.
 
    - **Heartbeat File**:
      - If the heartbeat mechanism is enabled, verify that the heartbeat file is being updated at the specified intervals.
 
    - **Processed Files Log**:
-     - If this feature is enabled, place a test NSF file in the monitored directory and check if it's logged properly.
+     - Since this feature is enabled by default, place a test NSF file in the monitored directory and check if it's logged properly in the `$ProcessedFilesLog`.
 
 ---
 
