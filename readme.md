@@ -77,8 +77,8 @@ These settings are essential for the script to function correctly. Update the pl
 # Directory to monitor for new NSF files.
 $Folder = "C:\path\to\your\NSF\directory"
 
-# Path to the Domino server console executable.
-$ConsolePath = "C:\path\to\Domino\nserver.exe"
+# Path to the Domino nsmddbs.exe (Scanmail Agent) executable.
+$ConsolePath = "C:\path\to\nsmddbs.exe"
 
 # Maximum number of concurrent scans to run simultaneously.
 $MaxConcurrentScans = 4
@@ -90,7 +90,7 @@ $ConsoleLogLevel = "INFO"  # Valid options: DEBUG, INFO, WARNING, ERROR
 **Instructions:**
 
 - **$Folder**: Replace `"C:\path\to\your\NSF\directory"` with the path to the directory where NSF files are placed for scanning.
-- **$ConsolePath**: Replace `"C:\path\to\Domino\nserver.exe"` with the actual path to the Domino server console executable.
+- **$ConsolePath**: Replace `"C:\path\to\nsmddbs.exe"` with the actual path to the Domino nsmddbs executable.
 - **$MaxConcurrentScans**: Set this to the number of concurrent scans you want to allow. This depends on your system's resources.
 - **$ConsoleLogLevel**: Set the desired console log level. Valid options are `DEBUG`, `INFO`, `WARNING`, and `ERROR`.
 

@@ -8,7 +8,7 @@
 # =====================================
 
 $Folder = "C:\path\to\nsf\directory"               # Directory to monitor for new NSF files.
-$ConsolePath = "C:\path\to\Domino\nserver.exe"      # Path to the Domino server console executable.
+$ConsolePath = "C:\path\to\nsmddbs.exe"            # Path to the nsmddbs.exe executable.
 $MaxConcurrentScans = 4                              # Maximum number of concurrent scans to run simultaneously.
 $ConsoleLogLevel = "INFO"                            # Valid options: DEBUG, INFO, WARNING, ERROR
 
@@ -407,7 +407,7 @@ try {
 
             # Properly quote the file path
             $QuotedFilePath = '"' + $FilePath + '"'
-            $ScanmailCommand = "-c 'load SMDdbs -manual $QuotedFilePath'"
+            $ScanmailCommand = "-manual $QuotedFilePath"
 
             try {
                 Write-Log "Executing ScanMail command: $ScanmailCommand" "DEBUG"
