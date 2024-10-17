@@ -2,6 +2,38 @@
 
 This guide provides step-by-step instructions for configuring and installing the **Trend Micro ScanMail for Domino Instant NSF Scanner Script** as a Windows Task Scheduler task that runs in the background upon system boot.
 
+## Features
+
+This PowerShell script offers a wide range of features designed to deliver reliable, scalable, and efficient directory monitoring and file processing:
+
+1. **Real-Time Directory Monitoring**: 
+   - Continuously monitors a specified folder for new files.
+   - Implements a queuing system to ensure all files are processed as they are added.
+
+2. **Concurrency with Worker Jobs**: 
+   - Supports multi-threaded file processing using PowerShell’s `Start-ThreadJob`, enabling parallel execution of tasks.
+   - Includes job self-monitoring
+
+3. **Comprehensive Logging and Error Handling**: 
+   - Logs system activity and errors at multiple severity levels (INFO, WARNING, ERROR).
+   - Automatic email alerts for errors
+
+4. **Email Notifications**: 
+   - Sends detailed email notifications for job completions, failures, or any critical events.
+
+5. **Self-Check Mechanism**: 
+   - A dedicated thread monitors job performance, restarting any failed or timed-out jobs to maintain reliability.
+
+6. **Scalable Resource Management**: 
+   - Configurable maximum number of concurrent scans (`$MaxConcurrentScans`) to optimize system performance based on resource availability.
+
+7. **Heartbeat and Processed Files Tracking**: 
+   - Tracks the health of the system using a heartbeat mechanism to allow external monitoring of script execution.
+   - Logs processed files to prevent duplicate processing and to maintain a record of completed tasks.
+
+8. **Cleanup Routines**: 
+   - Ensures proper cleanup of system resources and temporary files upon script completion or exit.
+
 ## Table of Contents
 
 1. [Prerequisites](#prerequisites)
