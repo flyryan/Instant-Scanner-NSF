@@ -7,7 +7,7 @@ This guide provides step-by-step instructions for configuring and installing the
 This PowerShell script offers a wide range of features designed to deliver reliable, scalable, and efficient directory monitoring and file processing:
 
 1. **Real-Time Directory Monitoring**: 
-   - Continuously monitors a specified folder for new files.
+   - Continuously monitors a specified folder for new NSF database files.
    - Implements a queuing system to ensure all files are processed as they are added.
 
 2. **Concurrency with Worker Jobs**: 
