@@ -290,8 +290,8 @@ if ($cancelKeyPressEvent) {
 # =====================================
 
 try {
-    global:Write-Log "Monitoring directory: $Folder" "INFO"
-    global:Write-Log "Script started successfully." "INFO"
+    # global:Write-Log "Monitoring directory: $Folder" "INFO"
+    global:Write-Log "Script initializing." "INFO"
 
     # Function to start a worker job
     function Start-WorkerJob {
