@@ -23,7 +23,11 @@ This guide provides step-by-step instructions for configuring and installing the
 
 Before installing and configuring the script, ensure the following prerequisites are met:
 
-- **Operating System**: Windows Server or Windows Desktop OS with PowerShell installed (version 5.0 or higher is recommended).
+- **Operating System**: Windows Server or Windows Desktop OS with PowerShell installed (version 7.0 or higher is required).
+  - **PowerShell Installation**: Use the following [`winget`](https://learn.microsoft.com/en-us/windows/package-manager/winget/) command to install the latest release version of PowerShell:
+    ```
+    winget install --id Microsoft.Powershell --source winget
+    ```
 - **Permissions**: Administrator privileges to create scheduled tasks and modify system configurations.
 - **Trend Micro ScanMail for Domino**: Ensure it is installed and configured correctly on the system.
 - **SMTP Server**: *(Optional)* An SMTP server is available for sending email notifications if email alerts are enabled.
