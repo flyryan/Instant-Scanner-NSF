@@ -186,7 +186,7 @@ function global:Cleanup-Script {
                     global:Write-Log "Failed to unregister event subscriber: $_" "ERROR"
                 }
             } else {
-                global:Write-Log "Skipped unregistering an event subscriber with null SubscriptionId." "WARNING"
+                global:Write-Log "Skipped unregistering an event subscriber with null SubscriptionId." "DEBUG"
             }
         }
 
@@ -307,7 +307,7 @@ try {
                 $EnableLogging,
                 $EnableEmailNotification,
                 $EmailSettings,
-                $HeartbeatFile,
+                $File,
                 $EnableHeartbeat,
                 $EnableProcessedFilesLog,
                 $ProcessedFilesLog,
@@ -613,7 +613,7 @@ try {
                     try {
                         $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
                         Set-Content -Path $HeartbeatFile -Value $Timestamp
-                        Write-Log "Heartbeat updated."
+                        Write-Log "Heartbeat updated." "DEBUG"
                     } catch {
                         Write-Log "Failed to update heartbeat: $_" "ERROR"
                     }
