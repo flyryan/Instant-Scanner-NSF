@@ -284,7 +284,7 @@ if ($cancelKeyPressEvent) {
         global:Write-Log "Failed to register CancelKeyPress handler: $_" "ERROR"
     }
 } else {
-    global:Write-Log "CancelKeyPress event is not available in this PowerShell host." "WARNING"
+    global:Write-Log "CancelKeyPress event is not available in this PowerShell host." "DEBUG"
 }
 
 # =====================================
@@ -371,7 +371,7 @@ try {
                     try {
                         $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
                         Set-Content -Path $HeartbeatFile -Value $Timestamp
-                        Write-Log "Heartbeat updated."
+                        Write-Log "Heartbeat updated." "DEBUG"
                     } catch {
                         Write-Log "Failed to update heartbeat: $_" "ERROR"
                     }
