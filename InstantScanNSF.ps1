@@ -167,8 +167,6 @@ function global:Cleanup-Script {
             $_.Name -eq 'FileCreatedEvent' -or 
             $_.Name -eq 'SelfCheckJob' 
         }
-        # It seems like line 65 is being used; ensure it's intended or remove if unnecessary
-        # Receive-Job -Id 65  # Uncomment if necessary
 
         foreach ($Job in $JobsToCleanup) {
             global:Write-Log "Stopping job: $($Job.Name) (ID: $($Job.Id))" "DEBUG"
