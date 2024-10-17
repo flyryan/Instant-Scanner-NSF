@@ -12,11 +12,11 @@ This PowerShell script offers a wide range of features designed to deliver relia
 
 2. **Concurrency with Worker Jobs**: 
    - Supports multi-threaded file processing using PowerShell’s `Start-ThreadJob`, enabling parallel execution of tasks.
-   - Includes job self-monitoring
+   - Includes job self-monitoring.
 
 3. **Comprehensive Logging and Error Handling**: 
    - Logs system activity and errors at multiple severity levels (INFO, WARNING, ERROR).
-   - Automatic email alerts for errors
+   - Automatic email alerts for errors.
 
 4. **Email Notifications**: 
    - Sends detailed email notifications for job completions, failures, or any critical events.
