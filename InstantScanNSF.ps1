@@ -402,19 +402,8 @@ try {
             # Start processing
             Write-Log "Worker job started for file: $FilePath" "INFO"
 
-            # Wait until the file is fully accessible
-            while ($true) {
-                try {
-                    Write-Log "Attempting to open file: $FilePath" "DEBUG"
-                    $Stream = [System.IO.File]::Open($FilePath, 'Open', 'ReadWrite', 'None')
-                    $Stream.Close()
-                    Write-Log "File is accessible: $FilePath" "DEBUG"
-                    break
-                } catch {
-                    Write-Log "File is locked or inaccessible: $FilePath. Retrying in 500ms." "WARNING"
-                    Start-Sleep -Milliseconds 500
-                }
-            }
+            # Add a 2-second delay before executing the scan command
+            Start-Sleep -Seconds 2
 
             # Properly quote the file path
             $QuotedFilePath = '"' + $FilePath + '"'
